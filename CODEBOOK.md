@@ -9,6 +9,12 @@ The experiments have been carried out with a group of 30 volunteers within an ag
 
 The sensor signals (accelerometer and gyroscope) were pre-processed by applying noise filters and then sampled in fixed-width sliding windows of 2.56 sec and 50% overlap (128 readings/window). The sensor acceleration signal, which has gravitational and body motion components, was separated using a Butterworth low-pass filter into body acceleration and gravity. The gravitational force is assumed to have only low frequency components, therefore a filter with 0.3 Hz cutoff frequency was used. From each window, a vector of features was obtained by calculating variables from the time and frequency domain.
 
+A data analysis is run, in order to achieve the following results:
+- Merge the training and the test sets to create one overall data set.
+- Extracts only the measurements on the mean and standard deviation for each measurement. 
+- Appropriately label the data set with descriptive activity names. 
+- Create a new, tidy, aggregate data set with the average of each variable for each activity and each subject.
+
 ## 1. Raw Data
 
 The dataset includes the following files:
@@ -44,6 +50,16 @@ The dataset includes the following files:
 Both "train" and "test" contain a subfolder, called "Inertial Signals", which contains the original unpreprocessed data. Such data were not used in my analysis.
 
 ## 2. The R script
+
+The script provided in this repo performs the cleaning of the raw data, in order to obtain a tidy dataset, as stated in the paragraph 0.
+
+It consists of 7 tasks (6 as two collapse), which are performed sequentially:
+0. Getting and unzipping the archives.
+1. Merging the raw datasets; includes adding variable names and adding the two variables ACTIVITY and SUBJECT from the corresponding files.
+2. Extracting only the desired variables; the choice is implemented by looking at the variable name and by considering only variables related to "mean()" or "std()".
+3. (4.) Adding descriptive names to the listed activities.
+5. Creating the output tidy data set, carrying the average of each variable for each activity and each subject.
+6. Saving the results to a file.
 
 ```
 ## 0. Check if the remote file has already
@@ -135,7 +151,7 @@ Both "train" and "test" contain a subfolder, called "Inertial Signals", which co
 	tidyData2 <- tidyData2[order(tidyData2$ACTIVITY,tidyData2$SUBJECT),]
 	rownames(tidyData2) <- seq(1:nrow(tidyData2))
 
-##    Write results to file
+## 6. Write results to file
 
 	message("Saving results to file...")
 	resDir <- paste(getwd(),"\\results",sep="")
