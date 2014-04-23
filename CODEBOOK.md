@@ -54,12 +54,13 @@ Both "train" and "test" contain a subfolder, called "Inertial Signals", which co
 The script provided in this repo performs the cleaning of the raw data, in order to obtain a tidy dataset, as stated in the paragraph 0.
 
 It consists of 7 tasks (6 as two collapse), which are performed sequentially:
-0. Getting and unzipping the archives.
-1. Merging the raw datasets; includes adding variable names and adding the two variables ACTIVITY and SUBJECT from the corresponding files.
-2. Extracting only the desired variables; the choice is implemented by looking at the variable name and by considering only variables related to "mean()" or "std()".
-3. (4.) Adding descriptive names to the listed activities.
-5. Creating the output tidy data set, carrying the average of each variable for each activity and each subject.
-6. Saving the results to a file.
+
+- Getting and unzipping the archives.
+- Merging the raw datasets; includes adding variable names and adding the two variables ACTIVITY and SUBJECT from the corresponding files. "Merging" is implemented as "appending", not as "JOINing the SQL way", such as with the `merge()` function, as the two datasets have the same schema and refer to two independent sets of measurement of the same quantities.
+- Extracting only the desired variables; the choice is implemented by looking at the variable name and by considering only variables related to "mean()" or "std()".
+- Adding descriptive names to the listed activities.
+- Creating the output tidy data set, carrying the average of each variable for each activity and each subject.
+- Saving the results to a file.
 
 ```
 ## 0. Check if the remote file has already
@@ -167,3 +168,92 @@ It consists of 7 tasks (6 as two collapse), which are performed sequentially:
 ```
 
 ## 3. Results
+
+The computed dataset consists of 180 rows x 68 columns. We have exactly 180 rows, as the instance corresponds to the cartesian product of activities (6) and subjects (30).
+
+The column names are:
+
+- ACTIVITY
+- SUBJECT
+- MEAN_OF_tBodyAcc-mean()-X
+- MEAN_OF_tBodyAcc-mean()-Y
+- MEAN_OF_tBodyAcc-mean()-Z
+- MEAN_OF_tBodyAcc-std()-X
+- MEAN_OF_tBodyAcc-std()-Y
+- MEAN_OF_tBodyAcc-std()-Z
+- MEAN_OF_tGravityAcc-mean()-X
+- MEAN_OF_tGravityAcc-mean()-Y
+- MEAN_OF_tGravityAcc-mean()-Z
+- MEAN_OF_tGravityAcc-std()-X
+- MEAN_OF_tGravityAcc-std()-Y
+- MEAN_OF_tGravityAcc-std()-Z
+- MEAN_OF_tBodyAccJerk-mean()-X
+- MEAN_OF_tBodyAccJerk-mean()-Y
+- MEAN_OF_tBodyAccJerk-mean()-Z
+- MEAN_OF_tBodyAccJerk-std()-X
+- MEAN_OF_tBodyAccJerk-std()-Y
+- MEAN_OF_tBodyAccJerk-std()-Z
+- MEAN_OF_tBodyGyro-mean()-X
+- MEAN_OF_tBodyGyro-mean()-Y
+- MEAN_OF_tBodyGyro-mean()-Z
+- MEAN_OF_tBodyGyro-std()-X
+- MEAN_OF_tBodyGyro-std()-Y
+- MEAN_OF_tBodyGyro-std()-Z
+- MEAN_OF_tBodyGyroJerk-mean()-X
+- MEAN_OF_tBodyGyroJerk-mean()-Y
+- MEAN_OF_tBodyGyroJerk-mean()-Z
+- MEAN_OF_tBodyGyroJerk-std()-X
+- MEAN_OF_tBodyGyroJerk-std()-Y
+- MEAN_OF_tBodyGyroJerk-std()-Z
+- MEAN_OF_tBodyAccMag-mean()
+- MEAN_OF_tBodyAccMag-std()
+- MEAN_OF_tGravityAccMag-mean()
+- MEAN_OF_tGravityAccMag-std()
+- MEAN_OF_tBodyAccJerkMag-mean()
+- MEAN_OF_tBodyAccJerkMag-std()
+- MEAN_OF_tBodyGyroMag-mean()
+- MEAN_OF_tBodyGyroMag-std()
+- MEAN_OF_tBodyGyroJerkMag-mean()
+- MEAN_OF_tBodyGyroJerkMag-std()
+- MEAN_OF_fBodyAcc-mean()-X
+- MEAN_OF_fBodyAcc-mean()-Y
+- MEAN_OF_fBodyAcc-mean()-Z
+- MEAN_OF_fBodyAcc-std()-X
+- MEAN_OF_fBodyAcc-std()-Y
+- MEAN_OF_fBodyAcc-std()-Z
+- MEAN_OF_fBodyAccJerk-mean()-X
+- MEAN_OF_fBodyAccJerk-mean()-Y
+- MEAN_OF_fBodyAccJerk-mean()-Z
+- MEAN_OF_fBodyAccJerk-std()-X
+- MEAN_OF_fBodyAccJerk-std()-Y
+- MEAN_OF_fBodyAccJerk-std()-Z
+- MEAN_OF_fBodyGyro-mean()-X
+- MEAN_OF_fBodyGyro-mean()-Y
+- MEAN_OF_fBodyGyro-mean()-Z
+- MEAN_OF_fBodyGyro-std()-X
+- MEAN_OF_fBodyGyro-std()-Y
+- MEAN_OF_fBodyGyro-std()-Z
+- MEAN_OF_fBodyAccMag-mean()
+- MEAN_OF_fBodyAccMag-std()
+- MEAN_OF_fBodyBodyAccJerkMag-mean()
+- MEAN_OF_fBodyBodyAccJerkMag-std()
+- MEAN_OF_fBodyBodyGyroMag-mean()
+- MEAN_OF_fBodyBodyGyroMag-std()
+- MEAN_OF_fBodyBodyGyroJerkMag-mean()
+- MEAN_OF_fBodyBodyGyroJerkMag-std()
+
+### Meaning of the variables
+
+- ACTIVITY is the name of the activity performed by the subject under test.
+- SUBJECT is the identifier of the subject
+
+All other variable start with "MEAN_OF_": they actually represent the mean value of the corresponding quantity, aggregated from the original data.
+To understand what each variable means, the complete decoding guidelines are given here:
+
+- "t" at the start, just after "MEAN_OF_" represents a time domain variable, while "f" represents a frequency domain variable, obtained with the FFT algorithm.
+- "-mean()" or "-std()" tell us whether the original variable was a mean or a standard deviation measurement.
+- "Body" represents a body (high frequency) component, while "Gravity" is used for low frequency components.
+- "Acc" data come from accelerometer measurement, while "Gyro" come from a gyroscope.
+- The body linear acceleration and angular velocity were derived in time to obtain "Jerk" signals. 
+- "Mag" tells us that the measurement refers to the magnitude of the measured quantity, calculated using the Euclidean norm.
+- "-XYZ" is used to denote 3-axial signals in the X, Y and Z directions.
